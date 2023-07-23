@@ -8,10 +8,12 @@
 import Foundation
 import UIKit
 
+
 struct abcTextModel {
     private(set) var keys: Array<Key>
     
     private var inputString = ""
+    
     
     func getInputString() -> String{
         return inputString
@@ -33,6 +35,9 @@ struct abcTextModel {
     
     mutating func appendOne(value:String){
         inputString.append(value)
+    }
+    mutating func equal(value:String){
+        inputString = value
     }
 
     mutating func deleteOne(){

@@ -15,18 +15,85 @@ let vSpace = 24.0
 
 struct ContentView: View {
     @ObservedObject var viewModel: abcTextViewModel
-    
     let columnArray = makeColumnArray(horizontalSpacing: hSpace, keyWidth: inputWidth)
+    let textChecker = UITextChecker()
+
+    @State var selectedSuggestion: String?
     
     let horizontalPadding = makePaddingHorizontal(horizontalSpacing:hSpace, keyWidth:inputWidth)
-    
-    
+        
     var body: some View {
             VStack{
-                Text("Input: [" + viewModel.getInputString() + "]")
-                    .font(.title)
-                    .padding()
-                
+                Button(action: {
+                    viewModel.qwerty.toggle()
+                    if viewModel.qwerty{
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: true, chars: 48)
+                    } else {
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: false, chars: 48)
+                    }
+                    
+                }){
+                    if viewModel.qwerty{
+                        Text("ABC");
+                    } else {
+                        Text("QWERTY");
+                    }
+                }
+                .foregroundColor(.black)
+                .padding()
+                .frame(width: CGFloat(UIScreen.main.bounds.width-20), height: 50, alignment: .trailing)
+                Text("Input: [" + viewModel.currentInput + "]")
+                let completions = textChecker.completions(
+                    forPartialWordRange: NSRange(0..<viewModel.currentWord.utf16.count),
+                                    in: viewModel.currentWord,
+                                    language: "en_US"
+                                  )
+                let misspelledRange =
+                textChecker.rangeOfMisspelledWord(in: viewModel.currentWord,
+                                                      range: NSRange(0..<viewModel.currentWord.utf16.count),
+                                                      startingAt: 0,
+                                                      wrap: false,
+                                                      language: "en_US")
+
+                if misspelledRange.location != NSNotFound,
+                    let guesses = textChecker.guesses(forWordRange: misspelledRange,
+                                                         in: viewModel.currentWord,
+                                                         language: "en_US")?.prefix(3)
+                {
+                    var numSuggest = 0
+                    HStack{
+                        if completions == nil {
+                           // numSuggest = 3
+                            //error with numSuggest 
+                            
+                        } else {
+                            HStack{
+                                ForEach(Array(completions!.prefix(3)), id: \.self) { suggestion in
+                                    Text(suggestion)
+                                        .onTapGesture {
+                                            if let index = viewModel.currentInput.index(viewModel.currentInput.endIndex, offsetBy: -viewModel.currentWord.count, limitedBy: viewModel.currentInput.startIndex) {
+                                                viewModel.currentInput = String(viewModel.currentInput[..<index]) + suggestion + " "
+                                                        viewModel.currentWord = ""
+                                                                
+                                            }
+                                        }
+                                }
+                            }
+                        }
+                        ForEach(Array(guesses.prefix(3)), id: \.self) { suggestion in
+                            Text(suggestion)
+                                .onTapGesture {
+                                    if let index = viewModel.currentInput.index(viewModel.currentInput.endIndex, offsetBy: -viewModel.currentWord.count, limitedBy: viewModel.currentInput.startIndex) {
+                                        viewModel.currentInput = String(viewModel.currentInput[..<index]) + suggestion + " "
+                                                viewModel.currentWord = ""
+                                                        
+                                    }
+                                }
+                        }
+                    }
+                } else {
+                    Text("Not found")
+                }
                 ScrollView{
                     LazyVGrid(columns:columnArray, spacing:vSpace){
                         ForEach(viewModel.keys){ key in
@@ -40,6 +107,8 @@ struct ContentView: View {
                     }
                     .padding(.horizontal, horizontalPadding/2)
                 }
+                .frame(height: UIScreen.main.bounds.height * 0.68)
+                .padding()
             }
             .background(Color(red:220.0/255.0,green:220.0/255.0,blue:220.0/255.0))
     }
@@ -112,3 +181,4 @@ struct ContentView_Previews: PreviewProvider {
             .previewInterfaceOrientation(.landscapeLeft)
     }
 }
+
