@@ -11,10 +11,10 @@ import AVFoundation
 
 class abcTextViewModel:ObservableObject{
     
-    static let lettersABC = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","spc", "⇧","⌫", ".","📣", "🗑", ",", "!", "?","'", ":", "/", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    static let lettersQWERTY = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","spc", "⇧","⌫", ".","📣", "🗑", ",", "!", "?","'", ":", "/", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    static let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    var qwerty = false    
+    static let lettersABC = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","⌫","T","U","V","W","X","Y","Z","␣", "⇧", "🗑", ".","📣", ",", "!", "?","'", ":", "/"]
+    static let lettersQWERTY = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0","Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","⌫","Z","X","C","V","B","N","M","␣", "⇧", "🗑",".", "📣", ",", "!", "?","'", ":", "/"]
+    static let numbersArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    var qwerty = false
     static func createABCText(qwerty: Bool, chars: Int)-> abcTextModel {
         if qwerty{
             return abcTextModel(numberOfChars: chars, createKeyContent: {keyIndex in

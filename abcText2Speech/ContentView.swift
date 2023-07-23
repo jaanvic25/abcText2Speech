@@ -8,10 +8,10 @@
 import UIKit
 import SwiftUI
 
-let inputWidth = 64.0
-let inputHeight = 76.0
+let inputWidth = 48.0
+let inputHeight = 56.0
 let hSpace = 32.0
-let vSpace = 24.0
+let vSpace = 32.0
 
 struct ContentView: View {
     @ObservedObject var viewModel: abcTextViewModel
@@ -110,22 +110,23 @@ struct ContentView: View {
                 .frame(height: UIScreen.main.bounds.height * 0.68)
                 .padding()
             }
-            .background(Color(red:220.0/255.0,green:220.0/255.0,blue:220.0/255.0))
+            .background(Color(red:32.0/255.0,green:42.0/255.0,blue:68.0/255.0,opacity:1))
     }
 }
 
 func calcNumberOfColumns(horizontalSpacing:CGFloat, keyWidth:CGFloat)->CGFloat{
+    
     let screenWidth = UIScreen.main.bounds.width;
     var numberOfColumns = (Int)(floor(screenWidth - horizontalSpacing)/(keyWidth + horizontalSpacing));
-    
+    /*
     if (numberOfColumns < 3){
         numberOfColumns = 3;
     }
     
     if (numberOfColumns > 8){
         numberOfColumns = 8;
-    }
-    
+    }*/
+    numberOfColumns = 10;
     return CGFloat(numberOfColumns);
 }
 
@@ -160,12 +161,12 @@ struct keyView: View {
             let shape = RoundedRectangle(cornerRadius: 8)
             shape
                 .fill()
-                .foregroundColor(.white)
+                .foregroundColor(Color(red:255.0/255.0,green:255.0/255.0,blue:255.0/255.0,opacity:1.0))
             shape
                 .strokeBorder(lineWidth: 2)
                 .foregroundColor(.black)
             Text(key.content)
-                .font(.largeTitle)
+                .font(.system(size: 24))
                 .foregroundColor(.black)
         }
         .frame(width:keyWidth, height:keyHeight)
