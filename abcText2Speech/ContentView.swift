@@ -8,15 +8,19 @@
 import UIKit
 import SwiftUI
 
+let numberOfChars = 50
 let inputWidth = 48.0
 let inputHeight = 56.0
 let hSpace = 32.0
 let vSpace = 32.0
+let fontSize = 24.0
 
 struct ContentView: View {
     @ObservedObject var viewModel: abcTextViewModel
     let columnArray = makeColumnArray(horizontalSpacing: hSpace, keyWidth: inputWidth)
     let textChecker = UITextChecker()
+    let keyboardWidth = calcKeyBoardWidth(horizontalSpacing: hSpace, keyWidth: inputWidth)
+    
 
     @State var selectedSuggestion: String?
     
@@ -27,9 +31,9 @@ struct ContentView: View {
                 Button(action: {
                     viewModel.qwerty.toggle()
                     if viewModel.qwerty{
-                        viewModel.model = abcTextViewModel.createABCText(qwerty: true, chars: 48)
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: true, chars: numberOfChars)
                     } else {
-                        viewModel.model = abcTextViewModel.createABCText(qwerty: false, chars: 48)
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: false, chars: numberOfChars)
                     }
                     
                 }){
@@ -39,10 +43,25 @@ struct ContentView: View {
                         Text("QWERTY");
                     }
                 }
-                .foregroundColor(.black)
+                .foregroundColor(.white)
                 .padding()
-                .frame(width: CGFloat(UIScreen.main.bounds.width-20), height: 50, alignment: .trailing)
-                Text("Input: [" + viewModel.currentInput + "]")
+                .frame(width: CGFloat(UIScreen.main.bounds.width), height: inputHeight,
+                        alignment: .trailing)
+                HStack{
+                    Text("  INPUT: " + viewModel.currentInput)
+                    .font(.system(size: fontSize))
+                    .foregroundColor(.black)
+                    .frame(width: keyboardWidth-hSpace, height: inputHeight, alignment: .leading)
+                        .background(.white)
+                    Button(action: {
+                        viewModel.text2Speech()
+                    }){
+                        Text("📣")
+                            .font(.system(size: 40))
+                            .frame(width: inputHeight,height: inputHeight, alignment: .center)
+                                .background(.white)
+                    }
+                }
                 let completions = textChecker.completions(
                     forPartialWordRange: NSRange(0..<viewModel.currentWord.utf16.count),
                                     in: viewModel.currentWord,
@@ -60,13 +79,8 @@ struct ContentView: View {
                                                          in: viewModel.currentWord,
                                                          language: "en_US")?.prefix(3)
                 {
-                    var numSuggest = 0
                     HStack{
-                        if completions == nil {
-                           // numSuggest = 3
-                            //error with numSuggest 
-                            
-                        } else {
+                        if completions != nil {
                             HStack{
                                 ForEach(Array(completions!.prefix(3)), id: \.self) { suggestion in
                                     Text(suggestion)
@@ -91,8 +105,12 @@ struct ContentView: View {
                                 }
                         }
                     }
+                    .font(.system(size: fontSize))
+                    .foregroundColor(.white)
                 } else {
-                    Text("Not found")
+                    Text(" ")
+                        .font(.system(size: fontSize))
+                        .foregroundColor(.white)
                 }
                 ScrollView{
                     LazyVGrid(columns:columnArray, spacing:vSpace){
@@ -114,24 +132,12 @@ struct ContentView: View {
     }
 }
 
-func calcNumberOfColumns(horizontalSpacing:CGFloat, keyWidth:CGFloat)->CGFloat{
-    
-    let screenWidth = UIScreen.main.bounds.width;
-    var numberOfColumns = (Int)(floor(screenWidth - horizontalSpacing)/(keyWidth + horizontalSpacing));
-    /*
-    if (numberOfColumns < 3){
-        numberOfColumns = 3;
-    }
-    
-    if (numberOfColumns > 8){
-        numberOfColumns = 8;
-    }*/
-    numberOfColumns = 10;
-    return CGFloat(numberOfColumns);
+func calcNumberOfColumns()->CGFloat{
+    return CGFloat(10);
 }
 
 func makeColumnArray(horizontalSpacing:CGFloat, keyWidth:CGFloat)->[GridItem]{
-    let numberOfColumns = (Int)(calcNumberOfColumns(horizontalSpacing:horizontalSpacing, keyWidth:keyWidth));
+    let numberOfColumns = (Int)(calcNumberOfColumns());
     var columnArray:[GridItem] = []
     
     for _ in 0..<numberOfColumns{
@@ -141,10 +147,17 @@ func makeColumnArray(horizontalSpacing:CGFloat, keyWidth:CGFloat)->[GridItem]{
     return columnArray
 }
 
+func calcKeyBoardWidth(horizontalSpacing: CGFloat, keyWidth:CGFloat)->CGFloat{
+    let numberOfColumns = calcNumberOfColumns();
+    let keyboardWidth = numberOfColumns*keyWidth + (numberOfColumns - 1)*horizontalSpacing;
+    
+    return keyboardWidth;
+}
+
 func makePaddingHorizontal(horizontalSpacing: CGFloat, keyWidth:CGFloat)->CGFloat{
-    let numberOfColumns = calcNumberOfColumns(horizontalSpacing:horizontalSpacing, keyWidth:keyWidth);
     let screenWidth = CGFloat(UIScreen.main.bounds.width);
-    let padding = screenWidth - numberOfColumns*keyWidth - (numberOfColumns - 1)*horizontalSpacing;
+    let keyboardWidth = calcKeyBoardWidth(horizontalSpacing: horizontalSpacing, keyWidth: keyWidth);
+    let padding = screenWidth - keyboardWidth;
     
     return padding;
 }
@@ -152,7 +165,6 @@ func makePaddingHorizontal(horizontalSpacing: CGFloat, keyWidth:CGFloat)->CGFloa
 struct keyView: View {
     let key: abcTextModel.Key
     
-//    var label:String
     var keyWidth:CGFloat
     var keyHeight:CGFloat
     
@@ -166,7 +178,7 @@ struct keyView: View {
                 .strokeBorder(lineWidth: 2)
                 .foregroundColor(.black)
             Text(key.content)
-                .font(.system(size: 24))
+                .font(.system(size: fontSize))
                 .foregroundColor(.black)
         }
         .frame(width:keyWidth, height:keyHeight)
