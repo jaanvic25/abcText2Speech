@@ -11,8 +11,14 @@
 		5895335729D09D3400C679D4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5895335629D09D3400C679D4 /* ContentView.swift */; };
 		5895335929D09D3500C679D4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5895335829D09D3500C679D4 /* Assets.xcassets */; };
 		5895335C29D09D3600C679D4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5895335B29D09D3600C679D4 /* Preview Assets.xcassets */; };
+		589B35442ADA5C8E00E83BA3 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589B35432ADA5C8E00E83BA3 /* LoginView.swift */; };
 		589DA3BC29D20FE100B1E1D5 /* abcTextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589DA3BB29D20FE100B1E1D5 /* abcTextViewModel.swift */; };
 		589DA3C029D214E900B1E1D5 /* abcTextModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589DA3BF29D214E900B1E1D5 /* abcTextModel.swift */; };
+		CE148C9C2B39108000538578 /* ActionButton in Frameworks */ = {isa = PBXBuildFile; productRef = CE148C9B2B39108000538578 /* ActionButton */; };
+		CE6555E52B49E128009B4C61 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6555E42B49E128009B4C61 /* LoginViewModel.swift */; };
+		CE7A22B22B48C4B900B52DE6 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7A22B12B48C4B900B52DE6 /* DataController.swift */; };
+		CE832EFF2B50AB7900ACBF7F /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE832EFD2B50AB7900ACBF7F /* Model.xcdatamodeld */; };
+		CEC929D12B3F5ADA00BFC998 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC929D02B3F5ADA00BFC998 /* SignUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,8 +40,13 @@
 		5895335629D09D3400C679D4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5895335829D09D3500C679D4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5895335B29D09D3600C679D4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		589B35432ADA5C8E00E83BA3 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		589DA3BB29D20FE100B1E1D5 /* abcTextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = abcTextViewModel.swift; sourceTree = "<group>"; };
 		589DA3BF29D214E900B1E1D5 /* abcTextModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = abcTextModel.swift; sourceTree = "<group>"; };
+		CE6555E42B49E128009B4C61 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		CE7A22B12B48C4B900B52DE6 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		CE832EFE2B50AB7900ACBF7F /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		CEC929D02B3F5ADA00BFC998 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE148C9C2B39108000538578 /* ActionButton in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,8 +84,13 @@
 				5895335629D09D3400C679D4 /* ContentView.swift */,
 				589DA3BF29D214E900B1E1D5 /* abcTextModel.swift */,
 				589DA3BB29D20FE100B1E1D5 /* abcTextViewModel.swift */,
+				589B35432ADA5C8E00E83BA3 /* LoginView.swift */,
+				CE6555E42B49E128009B4C61 /* LoginViewModel.swift */,
+				CEC929D02B3F5ADA00BFC998 /* SignUpView.swift */,
+				CE7A22B12B48C4B900B52DE6 /* DataController.swift */,
 				5895335829D09D3500C679D4 /* Assets.xcassets */,
 				5895335A29D09D3600C679D4 /* Preview Content */,
+				CE832EFD2B50AB7900ACBF7F /* Model.xcdatamodeld */,
 			);
 			path = abcText2Speech;
 			sourceTree = "<group>";
@@ -103,6 +120,9 @@
 			dependencies = (
 			);
 			name = abcText2Speech;
+			packageProductDependencies = (
+				CE148C9B2B39108000538578 /* ActionButton */,
+			);
 			productName = abcText2Speech;
 			productReference = 5895335129D09D3400C679D4 /* abcText2Speech.app */;
 			productType = "com.apple.product-type.application";
@@ -132,6 +152,7 @@
 			);
 			mainGroup = 5895334829D09D3400C679D4;
 			packageReferences = (
+				CE148C9A2B39108000538578 /* XCRemoteSwiftPackageReference "action-button" */,
 			);
 			productRefGroup = 5895335229D09D3400C679D4 /* Products */;
 			projectDirPath = "";
@@ -162,7 +183,12 @@
 				589DA3BC29D20FE100B1E1D5 /* abcTextViewModel.swift in Sources */,
 				589DA3C029D214E900B1E1D5 /* abcTextModel.swift in Sources */,
 				5895335729D09D3400C679D4 /* ContentView.swift in Sources */,
+				589B35442ADA5C8E00E83BA3 /* LoginView.swift in Sources */,
+				CE7A22B22B48C4B900B52DE6 /* DataController.swift in Sources */,
+				CE832EFF2B50AB7900ACBF7F /* Model.xcdatamodeld in Sources */,
+				CEC929D12B3F5ADA00BFC998 /* SignUpView.swift in Sources */,
 				5895335529D09D3400C679D4 /* abcText2SpeechApp.swift in Sources */,
+				CE6555E52B49E128009B4C61 /* LoginViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +393,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CE148C9A2B39108000538578 /* XCRemoteSwiftPackageReference "action-button" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftui-library/action-button.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CE148C9B2B39108000538578 /* ActionButton */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CE148C9A2B39108000538578 /* XCRemoteSwiftPackageReference "action-button" */;
+			productName = ActionButton;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		CE832EFD2B50AB7900ACBF7F /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CE832EFE2B50AB7900ACBF7F /* Model.xcdatamodel */,
+			);
+			currentVersion = CE832EFE2B50AB7900ACBF7F /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 5895334929D09D3400C679D4 /* Project object */;
 }
