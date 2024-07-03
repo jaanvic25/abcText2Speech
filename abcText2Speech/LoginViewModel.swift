@@ -111,14 +111,9 @@ class LoginViewModel: ObservableObject{
         }
         print(self.isLoggedIn)
         print(dataController.savedEntities[(dataController.savedEntities.count)-1].email!)
-//        if self.isLoggedIn {
-            
-            return (dataController.savedEntities[(dataController.savedEntities.count)-1], 1)
-            
-//        } else {
-//            print("not logged in")
-//            return (dataController.savedEntities[(dataController.savedEntities.count)-1], 0)
-//        }
+        
+        return (dataController.savedEntities[(dataController.savedEntities.count)-1], 1)
+
     }
     
     

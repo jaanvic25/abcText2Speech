@@ -10,6 +10,8 @@ import CoreData
 
 class DataController: ObservableObject{
 
+    static let shared = DataController()
+    
     let container: NSPersistentContainer
     @Published var savedEntities: [UserEntity] = []
     

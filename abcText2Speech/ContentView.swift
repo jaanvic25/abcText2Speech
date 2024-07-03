@@ -8,21 +8,12 @@
 import UIKit
 import SwiftUI
 
-<<<<<<< HEAD
 let inputWidth = 40.0
 let inputHeight = 48.0
 let hSpace = 32.0
 let vSpace = 24.0
 var keyColor = Color.white
 var textColor = Color.black
-=======
-let numberOfChars = 50
-let inputWidth = 48.0
-let inputHeight = 56.0
-let hSpace = 32.0
-let vSpace = 32.0
-let fontSize = 24.0
->>>>>>> e114f5c63dc92826312231705ad52144d8929c0a
 
 struct ContentView: View {
     
@@ -43,7 +34,7 @@ struct ContentView: View {
     var backgroundColor = Color(red:220/255.0,green:220/255.0, blue:220/255.0)
         
     var body: some View {
-<<<<<<< HEAD
+
         VStack{
             Spacer(minLength: 100)
             Button(action: {
@@ -51,7 +42,7 @@ struct ContentView: View {
 
             }, label: {
                 Label("", systemImage: "gear")
-//                Text(currentUser.email ?? "email")
+                Text(currentUser.email ?? "email")
             })
             .sheet(isPresented: $showSettings, content: {
                 Settings(viewModel: abcTextViewModel())
@@ -103,77 +94,12 @@ struct ContentView: View {
                                         if let index = viewModel.currentInput.index(endIndex, offsetBy: -viewModel.currentWord.count, limitedBy: startIndex) {
                                             viewModel.currentInput = String(viewModel.currentInput[..<index]) + suggestion + ""
                                             viewModel.currentWord = ""
-=======
-            VStack{
-                Button(action: {
-                    viewModel.qwerty.toggle()
-                    if viewModel.qwerty{
-                        viewModel.model = abcTextViewModel.createABCText(qwerty: true, chars: numberOfChars)
-                    } else {
-                        viewModel.model = abcTextViewModel.createABCText(qwerty: false, chars: numberOfChars)
-                    }
-                    
-                }){
-                    if viewModel.qwerty{
-                        Text("ABC");
-                    } else {
-                        Text("QWERTY");
-                    }
-                }
-                .foregroundColor(.white)
-                .padding()
-                .frame(width: CGFloat(UIScreen.main.bounds.width), height: inputHeight,
-                        alignment: .trailing)
-                HStack{
-                    Text("  INPUT: " + viewModel.currentInput)
-                    .font(.system(size: fontSize))
-                    .foregroundColor(.black)
-                    .frame(width: keyboardWidth-hSpace, height: inputHeight, alignment: .leading)
-                        .background(.white)
-                    Button(action: {
-                        viewModel.text2Speech()
-                    }){
-                        Text("📣")
-                            .font(.system(size: 40))
-                            .frame(width: inputHeight,height: inputHeight, alignment: .center)
-                                .background(.white)
-                    }
-                }
-                let completions = textChecker.completions(
-                    forPartialWordRange: NSRange(0..<viewModel.currentWord.utf16.count),
-                                    in: viewModel.currentWord,
-                                    language: "en_US"
-                                  )
-                let misspelledRange =
-                textChecker.rangeOfMisspelledWord(in: viewModel.currentWord,
-                                                      range: NSRange(0..<viewModel.currentWord.utf16.count),
-                                                      startingAt: 0,
-                                                      wrap: false,
-                                                      language: "en_US")
-
-                if misspelledRange.location != NSNotFound,
-                    let guesses = textChecker.guesses(forWordRange: misspelledRange,
-                                                         in: viewModel.currentWord,
-                                                         language: "en_US")?.prefix(3)
-                {
-                    HStack{
-                        if completions != nil {
-                            HStack{
-                                ForEach(Array(completions!.prefix(3)), id: \.self) { suggestion in
-                                    Text(suggestion)
-                                        .onTapGesture {
-                                            if let index = viewModel.currentInput.index(viewModel.currentInput.endIndex, offsetBy: -viewModel.currentWord.count, limitedBy: viewModel.currentInput.startIndex) {
-                                                viewModel.currentInput = String(viewModel.currentInput[..<index]) + suggestion + " "
-                                                        viewModel.currentWord = ""
-                                                                
-                                            }
->>>>>>> e114f5c63dc92826312231705ad52144d8929c0a
                                         }
                                     }
                             }
                         }
                     }
-<<<<<<< HEAD
+
                     ForEach(Array(guesses.prefix(3)), id: \.self) { suggestion in
                         Text(suggestion)
                             .onTapGesture {
@@ -184,14 +110,7 @@ struct ContentView: View {
                                 }
                             }
                     }
-=======
-                    .font(.system(size: fontSize))
-                    .foregroundColor(.white)
-                } else {
-                    Text(" ")
-                        .font(.system(size: fontSize))
-                        .foregroundColor(.white)
->>>>>>> e114f5c63dc92826312231705ad52144d8929c0a
+
                 }
             } else {
                 Text(" ")
@@ -237,7 +156,6 @@ struct ContentView: View {
                     Spacer(minLength: UIScreen.main.bounds.height/1.8)
                 }
             }
-<<<<<<< HEAD
             .frame(width:UIScreen.main.bounds.width ,height: UIScreen.main.bounds.height * 0.68, alignment: .center)
             .padding()
         }
@@ -275,7 +193,7 @@ struct ContentView: View {
                                 }
                                 
                             }){
-                                if viewModel.qwerty{
+                                if (viewModel.qwerty){
                                     Text("ABC");
                                 } else {
                                     Text("QWERTY");
@@ -293,9 +211,6 @@ struct ContentView: View {
                 }
             }
         }
-=======
-            .background(Color(red:32.0/255.0,green:42.0/255.0,blue:68.0/255.0,opacity:1))
->>>>>>> e114f5c63dc92826312231705ad52144d8929c0a
     }
 }
 
@@ -341,70 +256,17 @@ struct keyView: View {
             let shape = RoundedRectangle(cornerRadius: 8)
             shape
                 .fill()
-<<<<<<< HEAD
                 .foregroundColor(keyColor)
-=======
-                .foregroundColor(Color(red:255.0/255.0,green:255.0/255.0,blue:255.0/255.0,opacity:1.0))
->>>>>>> e114f5c63dc92826312231705ad52144d8929c0a
             shape
                 .strokeBorder(lineWidth: 2)
                 .foregroundColor(.black)
             Text(key.content)
-<<<<<<< HEAD
                 .font(.system(size: 22))
                 .foregroundColor(textColor)
-=======
-                .font(.system(size: fontSize))
-                .foregroundColor(.black)
->>>>>>> e114f5c63dc92826312231705ad52144d8929c0a
         }
         .frame(width:keyWidth, height:keyHeight)
     }
 }
-
-//struct Settings:View  {
-//    
-//    @Environment(\.presentationMode) var presentationMode
-//    @ObservedObject var viewModel: abcTextViewModel
-//    
-//    var body: some View {
-//        ZStack(alignment: .topLeading) {
-//            Color.gray
-//                .opacity(0.4)
-//                .edgesIgnoringSafeArea(.all)
-//            VStack(alignment: .trailing){
-//                Button(action:{
-//                    presentationMode.wrappedValue.dismiss()
-//                }, label: {
-//                    Image(systemName: "xmark")
-//                        .foregroundColor(.black)
-//                        .font(.title)
-//                        .padding(40)
-//                })
-//                HStack{
-//                    Spacer(minLength: UIScreen.main.bounds.width/3)
-//                    VStack{
-//                        Button(action: {
-//                            viewModel.qwerty.toggle()
-//                            
-//                        }){
-//                            if viewModel.qwerty{
-//                                Text("ABC");
-//                            } else {
-//                                Text("QWERTY");
-//                            }
-//                        }
-//                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-//                            Text("Change Key color")
-//                        })
-//                    }
-//                    Spacer(minLength: UIScreen.main.bounds.width/3)
-//                }
-//            }
-//        }
-//    }
-//}
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
