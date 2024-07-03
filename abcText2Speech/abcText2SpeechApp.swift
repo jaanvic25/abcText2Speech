@@ -9,12 +9,6 @@ import SwiftUI
 
 @main
 struct abcText2SpeechApp: App {
-//    let keyboard = abcTextViewModel()
-//    var body: some Scene {
-//        WindowGroup{
-//            ContentView(viewModel: keyboard)
-//        }
-//    }
     @ObservedObject private var dataController = DataController()
     var body: some Scene {
         WindowGroup{

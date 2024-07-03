@@ -21,7 +21,7 @@ class LoginViewModel: ObservableObject{
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var isLoggedIn: Bool = false
-    @StateObject var dataController = DataController()
+    @StateObject var dataController = DataController.shared
   
     private var cancellable: Set<AnyCancellable> = []
     

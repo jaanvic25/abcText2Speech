@@ -19,7 +19,7 @@ struct ContentView: View {
     
     @ObservedObject var viewModel: abcTextViewModel
     @ObservedObject var currentUser: UserEntity
-    @StateObject var dataController = DataController()
+    @StateObject var dataController = DataController.shared
     
     let columnArray = makeColumnArray(horizontalSpacing: hSpace, keyWidth: inputWidth)
     let textChecker = UITextChecker()
