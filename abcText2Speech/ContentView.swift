@@ -15,17 +15,18 @@ let vSpace = 24.0
 var keyColor = Color.white
 var textColor = Color.black
 
+let currentUser = currUser
+
 struct ContentView: View {
     
     @ObservedObject var viewModel: abcTextViewModel
-    @ObservedObject var currentUser: UserEntity
-    @StateObject var dataController = DataController.shared
+    //@ObservedObject var dataController = DataController.shared
     
     let columnArray = makeColumnArray(horizontalSpacing: hSpace, keyWidth: inputWidth)
     let textChecker = UITextChecker()
     let keyboardWidth = calcKeyBoardWidth(horizontalSpacing: hSpace, keyWidth: inputWidth)
     
-
+    
     
     @State var selectedSuggestion: String?
     @State var showSettings: Bool = false
@@ -42,7 +43,7 @@ struct ContentView: View {
 
             }, label: {
                 Label("", systemImage: "gear")
-                Text(currentUser.email ?? "email")
+                Text(currentUser.email ?? "email not found")
             })
             .sheet(isPresented: $showSettings, content: {
                 Settings(viewModel: abcTextViewModel())
@@ -161,7 +162,9 @@ struct ContentView: View {
         }
         .background(backgroundColor);
     }
-    
+//        .onAppear(
+//            viewModel.onAppear()
+//        )
     struct Settings:View  {
         
         @Environment(\.presentationMode) var presentationMode
@@ -271,8 +274,7 @@ struct keyView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         let keyboard = abcTextViewModel()
-        let user = UserEntity()
-        ContentView(viewModel: keyboard, currentUser: user)
+        ContentView(viewModel: keyboard)
             .previewDevice("iPhone 12")
             .preferredColorScheme(.light)
             .previewInterfaceOrientation(.landscapeLeft)

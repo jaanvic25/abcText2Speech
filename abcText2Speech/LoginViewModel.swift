@@ -92,7 +92,7 @@ class LoginViewModel: ObservableObject{
             .store(in: &cancellable)
     }
     
-    func signup()-> (UserEntity, Int){
+    func signup()-> (UserEntity){
         @StateObject var dataController = DataController()
         
         buttonState = .loading(title: "Loading", systemImage: "person")
@@ -101,7 +101,8 @@ class LoginViewModel: ObservableObject{
             if self.isValidEmail() && self.isValidPassword() && self.isValidName(){
                 self.isLoggedIn = true
                 dataController.addUser(firstname: self.fname, lastname: self.lname, email: self.email, password: self.password)
-                
+                currUser = dataController.savedEntities[(dataController.savedEntities.count)-1]
+
                 print("signed in")
                 print(self.isLoggedIn)
                 self.buttonState = .enabled(title: "Login", systemImage: "checkmark.circle")
@@ -110,10 +111,10 @@ class LoginViewModel: ObservableObject{
             }
         }
         print(self.isLoggedIn)
-        print(dataController.savedEntities[(dataController.savedEntities.count)-1].email!)
         
-        return (dataController.savedEntities[(dataController.savedEntities.count)-1], 1)
-
+//        print(currUser.email ?? "email not found")
+//        print(DataController.shared.savedEntities[0].email)
+        return currUser 
     }
     
     

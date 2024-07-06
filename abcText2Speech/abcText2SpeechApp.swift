@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct abcText2SpeechApp: App {
-    @ObservedObject private var dataController = DataController()
+    @ObservedObject private var dataController = DataController.shared
     var body: some Scene {
         WindowGroup{
             SignUpView()

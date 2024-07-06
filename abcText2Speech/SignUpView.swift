@@ -9,6 +9,7 @@ import SwiftUI
 import ActionButton
 import Combine
 
+var currUser = DataController.shared.savedEntities[0]
 
 struct SignUpView: View {
     
@@ -16,8 +17,6 @@ struct SignUpView: View {
     @FocusState private var focus: FocusableField?
     
     var body: some View {
-        var user = UserEntity()
-        var signup = (user, 10)
         if #available(iOS 16.0, *) {
             NavigationStack {
                 GroupBox{
@@ -63,8 +62,7 @@ struct SignUpView: View {
                             .submitLabel(.go)
                         
                         ActionButton(state: $model.buttonState, onTap:{
-                            signup = model.signup()
-                            user = signup.0
+                            currUser = model.signup()
                             
                         }, backgroundColor: .primary , foregroundColor: Color(UIColor.systemBackground)
                         )
@@ -79,7 +77,7 @@ struct SignUpView: View {
                 .textFieldStyle(.plain)
                 let keyboard = abcTextViewModel()
                 
-                NavigationLink (destination: ContentView(viewModel: keyboard, currentUser: user) , isActive: $model.isLoggedIn){
+                NavigationLink (destination: ContentView(viewModel: keyboard) , isActive: $model.isLoggedIn){
                     
                     EmptyView()
                 }
@@ -105,11 +103,7 @@ struct SignUpView: View {
                             .submitLabel(.go)
                         
                         ActionButton(state: $model.buttonState, onTap:{
-                            signup = model.signup()
-                            if signup.1 == 1 {
-                                user = signup.0
-                            }
-                            user = signup.0
+                            currUser = model.signup()   
                         }, backgroundColor: .primary)
                         NavigationLink (destination: LoginView()){
                             Text("Already have a profile? Click here to Log in")
@@ -125,7 +119,7 @@ struct SignUpView: View {
                 //ContentView(viewModel: keyboard)
                 
                 let keyboard = abcTextViewModel()
-                NavigationLink (destination: ContentView(viewModel: keyboard, currentUser: user) , isActive: $model.isLoggedIn){
+                NavigationLink (destination: ContentView(viewModel: keyboard) , isActive: $model.isLoggedIn){
                     EmptyView()
                 }
                 .navigationBarBackButtonHidden(true)

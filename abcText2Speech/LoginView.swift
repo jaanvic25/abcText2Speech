@@ -57,7 +57,7 @@ struct LoginView: View {
                 
                 let keyboard = abcTextViewModel()
                 Text("USER: " + user.email!)
-                let tempContentView = ContentView(viewModel: keyboard, currentUser: user)
+                let tempContentView = ContentView(viewModel: keyboard)
                 NavigationLink(destination: tempContentView,
                                isActive: $model.isLoggedIn){EmptyView()}
             
@@ -97,7 +97,7 @@ struct LoginView: View {
                 
                 //ContentView(viewModel: keyboard)
                 let keyboard = abcTextViewModel()
-                NavigationLink (destination: ContentView(viewModel: keyboard, currentUser: user) , isActive: $model.isLoggedIn){
+                NavigationLink (destination: ContentView(viewModel: keyboard) , isActive: $model.isLoggedIn){
                     EmptyView()
                 }
             }
