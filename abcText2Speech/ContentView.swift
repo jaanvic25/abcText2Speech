@@ -15,35 +15,38 @@ let vSpace = 24.0
 var keyColor = Color.white
 var textColor = Color.black
 
-let currentUser = currUser
+
 
 struct ContentView: View {
     
+
     @ObservedObject var viewModel: abcTextViewModel
-    //@ObservedObject var dataController = DataController.shared
+    @ObservedObject var dataController = DataController.shared
     
     let columnArray = makeColumnArray(horizontalSpacing: hSpace, keyWidth: inputWidth)
     let textChecker = UITextChecker()
     let keyboardWidth = calcKeyBoardWidth(horizontalSpacing: hSpace, keyWidth: inputWidth)
     
     
+    let currentUser = currUser
     
     @State var selectedSuggestion: String?
     @State var showSettings: Bool = false
     
     let horizontalPadding = makePaddingHorizontal(horizontalSpacing:hSpace, keyWidth:inputWidth)
     var backgroundColor = Color(red:220/255.0,green:220/255.0, blue:220/255.0)
-        
-    var body: some View {
+    
 
+    var body: some View {
+                
         VStack{
             Spacer(minLength: 100)
             Button(action: {
                 showSettings = true
-
+                
             }, label: {
                 Label("", systemImage: "gear")
-                Text(currentUser.email ?? "email not found")
+                Text(currentUser.email ?? " not found")
             })
             .sheet(isPresented: $showSettings, content: {
                 Settings(viewModel: abcTextViewModel())
@@ -100,7 +103,7 @@ struct ContentView: View {
                             }
                         }
                     }
-
+                    
                     ForEach(Array(guesses.prefix(3)), id: \.self) { suggestion in
                         Text(suggestion)
                             .onTapGesture {
@@ -111,7 +114,7 @@ struct ContentView: View {
                                 }
                             }
                     }
-
+                    
                 }
             } else {
                 Text(" ")
@@ -162,9 +165,6 @@ struct ContentView: View {
         }
         .background(backgroundColor);
     }
-//        .onAppear(
-//            viewModel.onAppear()
-//        )
     struct Settings:View  {
         
         @Environment(\.presentationMode) var presentationMode

@@ -21,7 +21,7 @@ class LoginViewModel: ObservableObject{
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var isLoggedIn: Bool = false
-    @StateObject var dataController = DataController.shared
+    @ObservedObject var dataController = DataController.shared
   
     private var cancellable: Set<AnyCancellable> = []
     
@@ -93,7 +93,7 @@ class LoginViewModel: ObservableObject{
     }
     
     func signup()-> (UserEntity){
-        @StateObject var dataController = DataController()
+        @ObservedObject var dataController = DataController.shared
         
         buttonState = .loading(title: "Loading", systemImage: "person")
         
@@ -119,7 +119,7 @@ class LoginViewModel: ObservableObject{
     
     
     func login() -> (UserEntity, Int){
-        @StateObject var dataController = DataController()
+        @ObservedObject var dataController = DataController.shared
         var userVerified: Bool = false
         var correctPassword: Bool = false
         var ct = 0
