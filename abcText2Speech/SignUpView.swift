@@ -26,6 +26,7 @@ struct SignUpView: View {
                         HStack{
                             TextField("First Name", text: $model.fname)
                                 .submitLabel(.next)
+                                .disableAutocorrection(true)
                                 .focused($focus, equals: .name)
                                 .padding(8)
                                 .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
@@ -34,6 +35,7 @@ struct SignUpView: View {
                                 }
                             
                             TextField("Last Name", text: $model.lname)
+                                .disableAutocorrection(true)
                                 .submitLabel(.next)
                                 .focused($focus, equals: .name)
                                 .padding(8)
@@ -75,9 +77,8 @@ struct SignUpView: View {
                 }
                 .padding()
                 .textFieldStyle(.plain)
-                let keyboard = abcTextViewModel()
                 
-                NavigationLink (destination: ContentView(viewModel: keyboard) , isActive: $model.isLoggedIn){
+                NavigationLink (destination: ContentView() , isActive: $model.isLoggedIn){
                     
                     EmptyView()
                 }
@@ -116,10 +117,8 @@ struct SignUpView: View {
                 .textFieldStyle(.plain)
                 
                 
-                //ContentView(viewModel: keyboard)
                 
-                let keyboard = abcTextViewModel()
-                NavigationLink (destination: ContentView(viewModel: keyboard) , isActive: $model.isLoggedIn){
+                NavigationLink (destination: ContentView() , isActive: $model.isLoggedIn){
                     EmptyView()
                 }
                 .navigationBarBackButtonHidden(true)

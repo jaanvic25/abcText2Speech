@@ -11,21 +11,23 @@ import AVFoundation
 
 class abcTextViewModel:ObservableObject{
     
+    static let shared = abcTextViewModel()
+    
     static let abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","spc", "⇧","⌫", ".","📣", "🗑", ",", "!", "?","'", ":", "/"]
     static let qwerty = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","spc", "⇧","⌫", ".","📣", "🗑", ",", "!", "?","'", ":", "/"]
     static let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     static let phrases = ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p0"]
     static let phrasesOrig = [
-        "p1": "Hi, how are you?",
-        "p2": "My name is ",
-        "p3": "Thank you.",
-        "p4": "I'm sorry.",
-        "p5": "Could I have water please?",
-        "p6": "",
-        "p7": "",
-        "p8": "",
-        "p9": "",
-        "p10": ""]
+        "p1": "Hi, how are you? ",
+        "p2": "My name is " ,
+        "p3": "Thank you. ",
+        "p4": "I'm sorry. ",
+        "p5": "Could I have water please? ",
+        "p6": currUser.p6 ?? "",
+        "p7": currUser.p7 ?? "",
+        "p8": currUser.p8 ?? "",
+        "p9": currUser.p9 ?? "",
+        "p10": currUser.p10 ?? ""]
     
     static let lettersABC = abc + phrases
     static let lettersQWERTY = qwerty + phrases
@@ -34,8 +36,10 @@ class abcTextViewModel:ObservableObject{
     var qwerty = false
     var nums = true
     var phrasesDict = phrasesOrig
+   
     static func createABCText(qwerty: Bool, nums: Bool, phrases: Dictionary<String, String>)-> abcTextModel {
-
+        
+        
         if qwerty{
             if nums{
                 return abcTextModel(numberOfChars: qwertyNum.count, createKeyContent: {keyIndex in
@@ -61,6 +65,12 @@ class abcTextViewModel:ObservableObject{
     @Published var suggestions: [String] = []
     @Published var currentInput = ""
     @Published var currentWord = ""
+    
+    @Published var p1 = ""
+    @Published var p2 = ""
+    @Published var p3 = ""
+    @Published var p4 = ""
+    @Published var p5 = ""
 
     private var uppercase = false;
     private var inputString = ""

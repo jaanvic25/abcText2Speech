@@ -15,6 +15,8 @@ class DataController: ObservableObject{
     let container: NSPersistentContainer
     @Published var savedEntities: [UserEntity] = []
     
+    
+    
     init(){
         container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores { description, error in

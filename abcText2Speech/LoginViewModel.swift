@@ -111,20 +111,18 @@ class LoginViewModel: ObservableObject{
             }
         }
         print(self.isLoggedIn)
-        
-//        print(currUser.email ?? "email not found")
-//        print(DataController.shared.savedEntities[0].email)
+    
         return currUser 
     }
     
     
-    func login() -> (UserEntity, Int){
+    func login() -> (UserEntity){
         @ObservedObject var dataController = DataController.shared
         var userVerified: Bool = false
         var correctPassword: Bool = false
         var ct = 0
         for entity in dataController.savedEntities {
-            if entity.email == self.email {
+            if entity.email?.lowercased() == self.email.lowercased() {
                 userVerified = true
                 if entity.id == self.password{
                     correctPassword = true
@@ -133,10 +131,10 @@ class LoginViewModel: ObservableObject{
             } else{
                 ct = ct + 1
             }
-            print(entity.email ?? "email?")
-            print(entity.id ?? "pass?")
+          
         }
         
+        currUser = dataController.savedEntities[ct]
         
         buttonState = .loading(title: "Loading", systemImage: "person")
         
@@ -153,13 +151,9 @@ class LoginViewModel: ObservableObject{
                 self.buttonState = .disabled(title: "Email is new to the system, sign up instead", systemImage: "exclamationmark.circle")
             }
         }
-        print("here")
-       
-//        if userVerified && correctPassword{
-            return (dataController.savedEntities[ct], 1)
-//        } else {
-//            return (dataController.savedEntities[0], 0)
-//        }
+        print(self.isLoggedIn)
+    
+        return currUser
     }
     
 }

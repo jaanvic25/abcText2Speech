@@ -22,8 +22,7 @@ struct LoginView: View {
     @FocusState private var focus: FocusableField?
     
     var body: some View {
-        var user = UserEntity()
-        var login = (user, 10)
+        
         if #available(iOS 16.0, *) {
             NavigationStack{
                 GroupBox{
@@ -32,6 +31,8 @@ struct LoginView: View {
                         TextField("Email", text: $model.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
+                            .padding(8)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
                             .submitLabel(.next)
                             .focused($focus, equals: .email)
                             .onSubmit {
@@ -40,11 +41,12 @@ struct LoginView: View {
                         
                         PasswordField(title: "Password", text: $model.password)
                             .focused($focus, equals: .password)
+                            .padding(8)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
                             .submitLabel(.go)
                         
                         ActionButton(state: $model.buttonState, onTap:{
-                            login = model.login()
-                            user = login.0
+                            currUser = model.login()
                         }, backgroundColor: .primary , foregroundColor: Color(UIColor.systemBackground)
                         )
                     }
@@ -54,12 +56,10 @@ struct LoginView: View {
                 .padding()
                 .textFieldStyle(.plain)
                 
-                
-                let keyboard = abcTextViewModel()
-                Text("USER: " + user.email!)
-                let tempContentView = ContentView(viewModel: keyboard)
-                NavigationLink(destination: tempContentView,
-                               isActive: $model.isLoggedIn){EmptyView()}
+                NavigationLink(destination: ContentView(), isActive: $model.isLoggedIn){
+                    
+                    EmptyView()
+                }
             
             }
             .navigationBarBackButtonHidden(false)
@@ -71,6 +71,7 @@ struct LoginView: View {
                         Text("LOGIN")
                         TextField("Email", text: $model.email)
                             .textContentType(.emailAddress)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
                             .keyboardType(.emailAddress)
                             .submitLabel(.next)
                             .focused($focus, equals: .email)
@@ -80,12 +81,13 @@ struct LoginView: View {
                         
                         PasswordField(title: "Password", text: $model.password)
                             .focused($focus, equals: .password)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
                             .submitLabel(.go)
                             
                         
                         ActionButton(state: $model.buttonState, onTap:{
                             
-                            user = model.login().0
+                            currUser = model.login()
                         }, backgroundColor: .primary)
                     }
                 } label: {
@@ -93,11 +95,8 @@ struct LoginView: View {
                 }
                 .padding()
                 .textFieldStyle(.plain)
-                
-                
-                //ContentView(viewModel: keyboard)
-                let keyboard = abcTextViewModel()
-                NavigationLink (destination: ContentView(viewModel: keyboard) , isActive: $model.isLoggedIn){
+
+                NavigationLink (destination: ContentView() , isActive: $model.isLoggedIn){
                     EmptyView()
                 }
             }
