@@ -20,6 +20,7 @@ struct SignUpView: View {
         if #available(iOS 16.0, *) {
             NavigationStack {
                 GroupBox{
+                    Spacer()
                     VStack{
                         Text("SIGN UP")
                             .font(.title)
@@ -72,17 +73,18 @@ struct SignUpView: View {
                             Text("Already have a profile? Click here to Log in")
                         }
                     }
+                    Spacer()
+                    
                 } label: {
                     Label("Welcome!", systemImage: "hand.wave")
                 }
                 .padding()
                 .textFieldStyle(.plain)
                 
-                NavigationLink (destination: ContentView() , isActive: $model.isLoggedIn){
+                NavigationLink (destination: ContentView().navigationBarBackButtonHidden(true) , isActive: $model.isLoggedIn){
                     
                     EmptyView()
                 }
-                .navigationBarBackButtonHidden(true)
             }
         } else {
             NavigationView{

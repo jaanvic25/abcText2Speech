@@ -8,8 +8,8 @@
 import UIKit
 import SwiftUI
 
-let inputWidth = 40.0
-let inputHeight = 48.0
+let inputWidth = 48.0 // 40
+let inputHeight = 57.5 // 48.0
 let hSpace = 32.0
 let vSpace = 24.0
 var keyColor = Color.white
@@ -57,29 +57,27 @@ struct ContentView: View {
                 
             }, label: {
                 Label("", systemImage: "gear")
-                Text(currentUser.email ?? " not found")
             })
             .sheet(isPresented: $showSettings, content: {
                 Settings()
                 
             })
             .foregroundColor(.black)
-            //  .padding()
-            .frame(width: CGFloat(UIScreen.main.bounds.width-20), height: 50, alignment: .trailing)
-            ZStack {
-                let shape = RoundedRectangle(cornerRadius: 4)
-                shape
-                    .fill()
-                    .foregroundColor(.white)
-                    .frame(width: UIScreen.main.bounds.width * 0.85, height: 50)
-                shape
-                    .strokeBorder(lineWidth: 0.1)
+ 
+            .frame(width: CGFloat(UIScreen.main.bounds.width-40), height: inputHeight, alignment: .trailing)
+            HStack{
+                Text("   INPUT: " + viewModel.currentInput)
+                    .font(.title3)
                     .foregroundColor(.black)
-                Text("Input: [" + viewModel.currentInput + "]")
-                    .foregroundStyle(Color.black)
-                    .fixedSize(horizontal: false, vertical: true)
-                Spacer()
+                    .frame(width: keyboardWidth-8*hSpace, height: inputHeight, alignment: .leading)
+                        .background(.white)
                 
+                Button(action: {viewModel.text2Speech()}){
+                    Text("📣")
+                        .font(.system(size:40))
+                        .frame(width: inputHeight, height: inputHeight, alignment: .center)
+                            .background(.white)
+                }
             }
             let completions = textChecker.completions(
                 forPartialWordRange: NSRange(0..<viewModel.currentWord.utf16.count),
@@ -99,6 +97,7 @@ struct ContentView: View {
                                                  language: "en_US")?.prefix(3)
             {
                 HStack{
+                    
                     let startIndex = viewModel.currentInput.startIndex;
                     let endIndex = viewModel.currentInput.endIndex;
                     if completions != nil {
@@ -128,29 +127,14 @@ struct ContentView: View {
                     
                 }
             } else {
-                Text(" ")
+                Text("no suggestions found")
             }
             
             ScrollView{
                 HStack{
                     VStack{
+//                        Spacer(minLength: UIScreen.main.bounds.height/5)
                         
-                        Button(action: {
-                            viewModel.nums.toggle()
-                            if(viewModel.nums){
-                                viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: true, phrases: viewModel.phrasesDict)
-                            } else{
-                                viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: false, phrases: viewModel.phrasesDict)
-                            }
-                        }, label: {
-                            if viewModel.nums {
-                                Label("", systemImage: "minus.circle")
-                            } else{
-                                Label("", systemImage: "plus.circle")
-                            }
-                        })
-                        .frame( height: UIScreen.main.bounds.height-80, alignment: .bottomLeading)
-                    }
                     LazyVGrid(columns:columnArray, spacing:vSpace){
                         ForEach(viewModel.keys){ key in
                             keyView(key: key,
@@ -160,19 +144,43 @@ struct ContentView: View {
                                 viewModel.processKey(label:key)
                             }
                         }
-                        .padding(.horizontal, horizontalPadding/2)
+                        .padding(.horizontal, horizontalPadding/3)
                     }
-                    .frame(width:UIScreen.main.bounds.width * 0.5 ,height: UIScreen.main.bounds.height * 0.68, alignment: .top)
+                    
+//                    .frame(width: calcKeyBoardWidth(horizontalSpacing: hSpace, keyWidth: inputWidth),
+//                           height: UIScreen.main.bounds.height * 0.68, alignment: .topLeading)
+
+//                    .background(Color.red.opacity(0.2)) //testing/
+                    .frame(width:UIScreen.main.bounds.width * 0.68 ,height: UIScreen.main.bounds.height * 0.68, alignment: .top)
+                        
                     
                 }
+                    Button(action: {
+                        viewModel.nums.toggle()
+                        if(viewModel.nums){
+                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: true, phrases: viewModel.phrasesDict)
+                        } else{
+                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: false, phrases: viewModel.phrasesDict)
+                        }
+                    }, label: {
+                        if viewModel.nums {
+                            Label("", systemImage: "minus.circle")
+                        } else{
+                            Label("", systemImage: "plus.circle")
+                        }
+                    })
+                    .frame( height: UIScreen.main.bounds.height, alignment: .bottom)
+                }
                 if viewModel.nums{
-                    Spacer(minLength: UIScreen.main.bounds.height/1.2)
+                    Spacer(minLength: UIScreen.main.bounds.height/2)
                 } else {
-                    Spacer(minLength: UIScreen.main.bounds.height/1.8)
+                    Spacer(minLength: UIScreen.main.bounds.height/2.5)
                 }
             }
             .frame(width:UIScreen.main.bounds.width ,height: UIScreen.main.bounds.height * 0.68, alignment: .center)
             .padding()
+            
+            
         }
         .background(backgroundColor);
     }
@@ -180,8 +188,16 @@ struct ContentView: View {
 }
    
 
+//func calcNumberOfColumns()->CGFloat{
+//    print(UIScreen.main.bounds.width/7)
+//    return CGFloat(10);
+//}
+
 func calcNumberOfColumns()->CGFloat{
-    return CGFloat(10);
+    let totalWidth = UIScreen.main.bounds.width
+    let availableWidth = totalWidth - (2 * 10   ) // Account for padding
+   // print(calcKeyBoardWidth(horizontalSpacing: hSpace, keyWidth: inputWidth), UIScreen.main.bounds.width * 0.5)
+    return floor(availableWidth / (inputWidth + hSpace))
 }
 
 func makeColumnArray(horizontalSpacing:CGFloat, keyWidth:CGFloat)->[GridItem]{
@@ -245,6 +261,7 @@ struct Settings:View  {
             Color(UIColor.lightGray)
                 .opacity(0.4)
                 .edgesIgnoringSafeArea(.all)
+        
             Text("Welcome " + (currUser.firstname ?? ""))
             VStack(alignment: .trailing){
                 Button(action:{
@@ -271,9 +288,9 @@ struct Settings:View  {
                                 Text("QWERTY");
                             }
                         }
-                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-                            Text("Change Key color")
-                        })
+//                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+//                            Text("Change Key color")
+//                        })
                         Text("Customize phrases")
                     HStack{
                         

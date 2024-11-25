@@ -24,10 +24,12 @@ struct LoginView: View {
     var body: some View {
         
         if #available(iOS 16.0, *) {
-            NavigationStack{
+//            NavigationStack{
                 GroupBox{
+                    Spacer()
                     VStack{
                         Text("LOGIN")
+                            .font(.title)
                         TextField("Email", text: $model.email)
                             .textContentType(.emailAddress)
                             .keyboardType(.emailAddress)
@@ -50,19 +52,20 @@ struct LoginView: View {
                         }, backgroundColor: .primary , foregroundColor: Color(UIColor.systemBackground)
                         )
                     }
+                    Spacer()
                 } label: {
-                    Label("Welcome back!", systemImage: "hand.wave")
+                    Label("Welcome Back!", systemImage: "hand.wave")
                 }
                 .padding()
                 .textFieldStyle(.plain)
                 
-                NavigationLink(destination: ContentView(), isActive: $model.isLoggedIn){
+            NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true), isActive: $model.isLoggedIn){
                     
                     EmptyView()
                 }
             
-            }
-            .navigationBarBackButtonHidden(false)
+//            }
+//            .navigationBarBackButtonHidden(true)
             
         } else {
             NavigationView{
@@ -96,7 +99,7 @@ struct LoginView: View {
                 .padding()
                 .textFieldStyle(.plain)
 
-                NavigationLink (destination: ContentView() , isActive: $model.isLoggedIn){
+                NavigationLink (destination: ContentView().navigationBarBackButtonHidden(true) , isActive: $model.isLoggedIn){
                     EmptyView()
                 }
             }

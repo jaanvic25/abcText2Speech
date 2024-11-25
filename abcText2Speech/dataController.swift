@@ -13,9 +13,7 @@ class DataController: ObservableObject{
     static let shared = DataController()
     
     let container: NSPersistentContainer
-    @Published var savedEntities: [UserEntity] = []
-    
-    
+    @Published var savedEntities: [UserEntity] = []    
     
     init(){
         container = NSPersistentContainer(name: "Model")
@@ -24,6 +22,7 @@ class DataController: ObservableObject{
                 print("Core Data failed to load: \(error.localizedDescription)")
             }
         }
+        addUser(firstname: "firstn", lastname: "lastn", email: "test@terst", password: "pass")
         fetchUsers()
     }
     
