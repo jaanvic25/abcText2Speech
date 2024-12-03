@@ -52,24 +52,15 @@ struct ContentView: View {
         VStack{
             
             Spacer(minLength: 100)
-            Button(action: {
-                showSettings = true
-                
-            }, label: {
-                Label("", systemImage: "gear")
-            })
-            .sheet(isPresented: $showSettings, content: {
-                Settings()
-                
-            })
-            .foregroundColor(.black)
- 
-            .frame(width: CGFloat(UIScreen.main.bounds.width-40), height: inputHeight, alignment: .trailing)
+            
             HStack{
+                Spacer()
+                    .frame(width: horizontalPadding/2, height: 20, alignment: .trailing)
                 Text("   INPUT: " + viewModel.currentInput)
                     .font(.title3)
                     .foregroundColor(.black)
-                    .frame(width: keyboardWidth-8*hSpace, height: inputHeight, alignment: .leading)
+                
+                    .frame(width:UIScreen.main.bounds.width * 0.68-inputWidth, height: inputHeight, alignment: .leading)
                         .background(.white)
                 
                 Button(action: {viewModel.text2Speech()}){
@@ -78,6 +69,21 @@ struct ContentView: View {
                         .frame(width: inputHeight, height: inputHeight, alignment: .center)
                             .background(.white)
                 }
+                Spacer()
+                    .frame(width: 40, height: 20, alignment: .trailing)
+                Button(action: {
+                    showSettings = true
+                    
+                }, label: {
+                    Label("", systemImage: "gear")
+                })
+                .sheet(isPresented: $showSettings, content: {
+                    Settings()
+                    
+                })
+                .foregroundColor(.black)
+     
+                .frame(width: 30, height: inputHeight, alignment: .topTrailing)
             }
             let completions = textChecker.completions(
                 forPartialWordRange: NSRange(0..<viewModel.currentWord.utf16.count),
@@ -129,12 +135,8 @@ struct ContentView: View {
             } else {
                 Text("no suggestions found")
             }
-            
-            ScrollView{
-                HStack{
-                    VStack{
-//                        Spacer(minLength: UIScreen.main.bounds.height/5)
-                        
+            HStack {
+                ScrollView{
                     LazyVGrid(columns:columnArray, spacing:vSpace){
                         ForEach(viewModel.keys){ key in
                             keyView(key: key,
@@ -147,39 +149,52 @@ struct ContentView: View {
                         .padding(.horizontal, horizontalPadding/3)
                     }
                     
-//                    .frame(width: calcKeyBoardWidth(horizontalSpacing: hSpace, keyWidth: inputWidth),
-//                           height: UIScreen.main.bounds.height * 0.68, alignment: .topLeading)
-
-//                    .background(Color.red.opacity(0.2)) //testing/
-                    .frame(width:UIScreen.main.bounds.width * 0.68 ,height: UIScreen.main.bounds.height * 0.68, alignment: .top)
-                        
+                    .frame(width: calcNumberOfColumns()*inputWidth+100,height: UIScreen.main.bounds.height * 0.68, alignment: .top)
                     
+                    Spacer(minLength: UIScreen.main.bounds.height/1.5)
                 }
-                    Button(action: {
-                        viewModel.nums.toggle()
-                        if(viewModel.nums){
-                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: true, phrases: viewModel.phrasesDict)
-                        } else{
-                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: false, phrases: viewModel.phrasesDict)
-                        }
-                    }, label: {
-                        if viewModel.nums {
-                            Label("", systemImage: "minus.circle")
-                        } else{
-                            Label("", systemImage: "plus.circle")
-                        }
-                    })
-                    .frame( height: UIScreen.main.bounds.height, alignment: .bottom)
+                Spacer()
+                    .frame(width: 10)
+                VStack{
+                    Button(action: {viewModel.processSep(value:"spc")}){
+                        Text("spc")
+                            .font(.system(size:20))
+                            .foregroundStyle(.black)
+                            .frame(width: inputWidth, height: inputHeight * 0.9, alignment: .center)
+                            .background(.white)
+                    }
+                    Button(action: {viewModel.processSep(value: "⇧")}){
+                        Text("⇧")
+                            .font(.system(size:20))
+                            .foregroundStyle(.black)
+                            .frame(width: inputWidth, height: inputHeight * 0.9, alignment: .center)
+                            .background(.white)
+                    }
+                    Button(action: {viewModel.processSep(value: "⌫")}){
+                        Text("⌫")
+                            .font(.system(size:20))
+                            .foregroundStyle(.black)
+                            .frame(width: inputWidth, height: inputHeight * 0.9, alignment: .center)
+                            .background(.white)
+                    }
+                    
+                    Button(action: {viewModel.processSep(value: "🗑")}){
+                        Text("🗑")
+                            .font(.system(size:20))
+                            .frame(width: inputWidth, height: inputHeight * 0.9, alignment: .center)
+                            .background(.white)
+                    }
+                    Spacer(minLength: 10)
+                        .frame(width: inputWidth, height: 20, alignment: .center)
+                        .foregroundStyle(.black)
+                        .background(backgroundColor)
+//                        .frame(width: inputWidth, height: inputHeight * 0.8, alignment: .center)
                 }
-                if viewModel.nums{
-                    Spacer(minLength: UIScreen.main.bounds.height/2)
-                } else {
-                    Spacer(minLength: UIScreen.main.bounds.height/2.5)
-                }
+                .frame(width: inputWidth+5, height: UIScreen.main.bounds.height * 0.75, alignment: .top)
             }
-            .frame(width:UIScreen.main.bounds.width ,height: UIScreen.main.bounds.height * 0.68, alignment: .center)
-            .padding()
+            .frame(width:UIScreen.main.bounds.width ,height: UIScreen.main.bounds.height * 0.75, alignment: .top)
             
+            .padding()
             
         }
         .background(backgroundColor);
@@ -188,16 +203,11 @@ struct ContentView: View {
 }
    
 
-//func calcNumberOfColumns()->CGFloat{
-//    print(UIScreen.main.bounds.width/7)
-//    return CGFloat(10);
-//}
-
 func calcNumberOfColumns()->CGFloat{
     let totalWidth = UIScreen.main.bounds.width
     let availableWidth = totalWidth - (2 * 10   ) // Account for padding
    // print(calcKeyBoardWidth(horizontalSpacing: hSpace, keyWidth: inputWidth), UIScreen.main.bounds.width * 0.5)
-    return floor(availableWidth / (inputWidth + hSpace))
+    return floor(availableWidth / (inputWidth + hSpace+10))
 }
 
 func makeColumnArray(horizontalSpacing:CGFloat, keyWidth:CGFloat)->[GridItem]{
@@ -259,19 +269,26 @@ struct Settings:View  {
     var body: some View {
         ZStack(alignment: .topLeading) {
             Color(UIColor.lightGray)
-                .opacity(0.4)
+                .opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
         
-            Text("Welcome " + (currUser.firstname ?? ""))
-            VStack(alignment: .trailing){
-                Button(action:{
-                    presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "xmark")
-                        .foregroundColor(.black)
-                        .font(.title)
-                        .padding(40)
-                })
+            
+            VStack(alignment: .leading){
+                HStack{
+                    Text("Welcome " + (currUser.firstname ?? ""))
+                        .frame(width:UIScreen.main.bounds.width*0.22, height: 20, alignment: .leading)
+                    Spacer()
+                        .frame(width:UIScreen.main.bounds.width*0.52, height: 20, alignment: .trailing)
+                    Button(action:{
+                        presentationMode.wrappedValue.dismiss()
+                    }, label: {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.black)
+                            .font(.title)
+                            .padding(40)
+                    })
+                    .frame(alignment: .trailing)
+                }
                 VStack{
                         Button(action: {
                             viewModel.qwerty.toggle()
@@ -288,10 +305,9 @@ struct Settings:View  {
                                 Text("QWERTY");
                             }
                         }
-//                        Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
-//                            Text("Change Key color")
-//                        })
+                        .frame(width:UIScreen.main.bounds.width*0.8, height: 20, alignment: .leading)
                         Text("Customize phrases")
+                        .frame(width:UIScreen.main.bounds.width*0.8, height: 20, alignment: .leading)
                     HStack{
                         
                         TextField("Custom Phrase 1", text: $viewModel.p1)
@@ -362,6 +378,8 @@ struct Settings:View  {
                         }
                     }
                 }
+                .frame(width:UIScreen.main.bounds.width*0.8, height: UIScreen.main.bounds.height*0.6, alignment: .bottom)
+
             }
         }
     }

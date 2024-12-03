@@ -13,8 +13,8 @@ class abcTextViewModel:ObservableObject{
     
     static let shared = abcTextViewModel()
     
-    static let abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","spc", "⇧","⌫", ".", "🗑", ",", "!", "?","'", "/"]
-    static let qwerty = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","spc", "⇧","⌫", ".", "🗑", ",", "!", "?","'", "/"]
+    static let abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z", ".", ",", "!", "?","'", "/"]
+    static let qwerty = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","spc", "⇧","⌫", ".", ",", "!", "?","'", "/"]
     static let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     static let phrases = ["👋", "🪪", "🙏", "❓", "💧", "p6", "p7", "p8", "p9", "p0"]
     static let phrasesOrig = [
@@ -92,23 +92,35 @@ class abcTextViewModel:ObservableObject{
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
         synthesizer.speak(utterance)
     }
-
-    func processKey(label:abcTextModel.Key){
-        var value = ""
-        if(label.content == "⇧"){
+    
+    func print1(str: Double){
+        print(str)
+    }
+    func processSep(value: String){
+        if(value == "⇧"){
             uppercase = true
-        } else if (label.content == "⌫") {
+        } else if (value == "⌫") {
             if currentWord.count != 0{
                 currentWord.removeLast()
             }
             model.deleteOne()
             currentInput = model.getInputString()
-        } else if (label.content == "spc") {
+        } else if (value == "spc") {
             model.appendOne(value:" ")
             currentInput = model.getInputString()
             currentWord = ""
 
-        } else if (abcTextViewModel.phrases.contains(label.content)){
+        } else if(value == "🗑"){
+            currentWord = ""
+            currentInput = ""
+            model.clearAll()
+        }
+        model.equal(value: currentInput)
+        print("Processing key : " + value + " input: " + model.getInputString());
+    }
+    func processKey(label:abcTextModel.Key){
+        var value = ""
+        if (abcTextViewModel.phrases.contains(label.content)){
             for key in phrasesDict.keys {
                 if key == label.content {
                     model.appendOne(value: phrasesDict[key]!)

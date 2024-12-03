@@ -66,6 +66,7 @@
 			children = (
 				5895335329D09D3400C679D4 /* abcText2Speech */,
 				5895335229D09D3400C679D4 /* Products */,
+				CEBF149B2CF4331F00FD4620 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -101,6 +102,13 @@
 				5895335B29D09D3600C679D4 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CEBF149B2CF4331F00FD4620 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
