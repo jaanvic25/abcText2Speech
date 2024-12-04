@@ -8,8 +8,8 @@
 import UIKit
 import SwiftUI
 
-let inputWidth = 48.0 // 40
-let inputHeight = 57.5 // 48.0
+let inputHeight = UIScreen.main.bounds.height / 6.84// 48.0
+let inputWidth = inputHeight * 0.8333333// 40
 let hSpace = 32.0
 let vSpace = 24.0
 var keyColor = Color.white
@@ -60,10 +60,10 @@ struct ContentView: View {
                     .font(.title3)
                     .foregroundColor(.black)
                 
-                    .frame(width:UIScreen.main.bounds.width * 0.68-inputWidth, height: inputHeight, alignment: .leading)
+                    .frame(width: calcNumberOfColumns()*inputWidth+100, height: inputHeight, alignment: .leading)
                         .background(.white)
                 
-                Button(action: {viewModel.text2Speech()}){
+                Button(action: {viewModel.print1(str: UIScreen.main.bounds.height)}){
                     Text("📣")
                         .font(.system(size:40))
                         .frame(width: inputHeight, height: inputHeight, alignment: .center)
@@ -78,7 +78,12 @@ struct ContentView: View {
                     Label("", systemImage: "gear")
                 })
                 .sheet(isPresented: $showSettings, content: {
-                    Settings()
+                    if #available(iOS 16.0, *){
+                        Settings()
+                            .presentationDetents([.large])
+                    } else {
+                        Settings()
+                    }
                     
                 })
                 .foregroundColor(.black)
@@ -271,14 +276,16 @@ struct Settings:View  {
             Color(UIColor.lightGray)
                 .opacity(0.2)
                 .edgesIgnoringSafeArea(.all)
-        
             
-            VStack(alignment: .leading){
+            
+            VStack{
+                Spacer()
+                    .frame(width:UIScreen.main.bounds.width, height: 20, alignment: .center)
                 HStack{
                     Text("Welcome " + (currUser.firstname ?? ""))
-                        .frame(width:UIScreen.main.bounds.width*0.22, height: 20, alignment: .leading)
+                        .frame(width:UIScreen.main.bounds.width*0.22, height: 20, alignment: .bottomLeading)
                     Spacer()
-                        .frame(width:UIScreen.main.bounds.width*0.52, height: 20, alignment: .trailing)
+                        .frame(width:UIScreen.main.bounds.width*0.52, height: 20, alignment: .bottomTrailing)
                     Button(action:{
                         presentationMode.wrappedValue.dismiss()
                     }, label: {
@@ -287,100 +294,97 @@ struct Settings:View  {
                             .font(.title)
                             .padding(40)
                     })
-                    .frame(alignment: .trailing)
                 }
-                VStack{
-                        Button(action: {
-                            viewModel.qwerty.toggle()
-                            if(viewModel.qwerty){
-                                viewModel.model = abcTextViewModel.createABCText(qwerty: true, nums: viewModel.nums, phrases: viewModel.phrasesDict)
-                            } else{
-                                viewModel.model = abcTextViewModel.createABCText(qwerty: false, nums: viewModel.nums, phrases: viewModel.phrasesDict)
-                            }
-                            
-                        }){
-                            if (viewModel.qwerty){
-                                Text("ABC");
-                            } else {
-                                Text("QWERTY");
-                            }
-                        }
-                        .frame(width:UIScreen.main.bounds.width*0.8, height: 20, alignment: .leading)
-                        Text("Customize phrases")
-                        .frame(width:UIScreen.main.bounds.width*0.8, height: 20, alignment: .leading)
-                    HStack{
-                        
-                        TextField("Custom Phrase 1", text: $viewModel.p1)
-                            .padding(8)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
-                            .submitLabel(.next)
-                        Button {
-                            currUser.p6 = viewModel.p1
-                            viewModel.phrasesDict["p6"] = currUser.p6
-                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
-                        } label: {
-                            Text("SAVE")
-                        }
+                .frame(width:UIScreen.main.bounds.width*0.8, height: 30, alignment: .leading)
+                Button(action: {
+                    viewModel.qwerty.toggle()
+                    if(viewModel.qwerty){
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: true, nums: viewModel.nums, phrases: viewModel.phrasesDict)
+                    } else{
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: false, nums: viewModel.nums, phrases: viewModel.phrasesDict)
                     }
-                    HStack{
-                        TextField("Custom Phrase 2", text: $viewModel.p2)
-                            .padding(8)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
-                            .submitLabel(.next)
-                        Button {
-                            currUser.p7 = viewModel.p2
-                            viewModel.phrasesDict["p7"] = currUser.p7
-                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
-                        } label: {
-                            Text("SAVE")
-                        }
-                    }
-                    HStack{
-                        
-                        TextField("Custom Phrase 3", text: $viewModel.p3)
-                            .padding(8)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
-                            .submitLabel(.next)
-                        Button {
-                            currUser.p8 = viewModel.p3
-                            viewModel.phrasesDict["p8"] = currUser.p8
-                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
-                        } label: {
-                            Text("SAVE")
-                        }
-                    }
-                    HStack{
-                        
-                        TextField("Custom Phrase 4", text: $viewModel.p4)
-                            .padding(8)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
-                            .submitLabel(.next)
-                        Button {
-                            currUser.p6 = viewModel.p1
-                            viewModel.phrasesDict["p9"] = currUser.p9
-                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
-                        } label: {
-                            Text("SAVE")
-                        }
-                    }
-                    HStack{
-                        
-                        TextField("Custom Phrase 5", text: $viewModel.p5)
-                            .padding(8)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
-                            .submitLabel(.next)
-                        Button {
-                            currUser.p10 = viewModel.p5
-                            viewModel.phrasesDict["p10"] = currUser.p10
-                            viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
-                        } label: {
-                            Text("SAVE")
-                        }
+                    
+                }){
+                    if (viewModel.qwerty){
+                        Text("ABC");
+                    } else {
+                        Text("QWERTY");
                     }
                 }
-                .frame(width:UIScreen.main.bounds.width*0.8, height: UIScreen.main.bounds.height*0.6, alignment: .bottom)
-
+                .frame(width:UIScreen.main.bounds.width*0.8, height: 20, alignment: .leading)
+                Text("Customize phrases")
+                    .frame(width:UIScreen.main.bounds.width*0.8, height: 20, alignment: .leading)
+                HStack{
+                    
+                    TextField("Custom Phrase 1", text: $viewModel.p1)
+                        .padding(8)
+                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
+                        .submitLabel(.next)
+                    Button {
+                        currUser.p6 = viewModel.p1
+                        viewModel.phrasesDict["p6"] = currUser.p6
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
+                    } label: {
+                        Text("SAVE")
+                    }
+                }
+                HStack{
+                    TextField("Custom Phrase 2", text: $viewModel.p2)
+                        .padding(8)
+                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
+                        .submitLabel(.next)
+                    Button {
+                        currUser.p7 = viewModel.p2
+                        viewModel.phrasesDict["p7"] = currUser.p7
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
+                    } label: {
+                        Text("SAVE")
+                    }
+                }
+                HStack{
+                    
+                    TextField("Custom Phrase 3", text: $viewModel.p3)
+                        .padding(8)
+                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
+                        .submitLabel(.next)
+                    Button {
+                        currUser.p8 = viewModel.p3
+                        viewModel.phrasesDict["p8"] = currUser.p8
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
+                    } label: {
+                        Text("SAVE")
+                    }
+                }
+                HStack{
+                    
+                    TextField("Custom Phrase 4", text: $viewModel.p4)
+                        .padding(8)
+                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
+                        .submitLabel(.next)
+                    Button {
+                        currUser.p6 = viewModel.p1
+                        viewModel.phrasesDict["p9"] = currUser.p9
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
+                    } label: {
+                        Text("SAVE")
+                    }
+                }
+                HStack{
+                    
+                    TextField("Custom Phrase 5", text: $viewModel.p5)
+                        .padding(8)
+                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
+                        .submitLabel(.next)
+                    Button {
+                        currUser.p10 = viewModel.p5
+                        viewModel.phrasesDict["p10"] = currUser.p10
+                        viewModel.model = abcTextViewModel.createABCText(qwerty: viewModel.qwerty, nums: viewModel.nums, phrases: viewModel.phrasesDict)
+                    } label: {
+                        Text("SAVE")
+                    }
+                }
             }
+            .frame(width:UIScreen.main.bounds.width*0.8, height: UIScreen.main.bounds.height, alignment: .center)
         }
     }
 }
