@@ -63,7 +63,7 @@ struct ContentView: View {
                     .frame(width: calcNumberOfColumns()*inputWidth+100, height: inputHeight, alignment: .leading)
                         .background(.white)
                 
-                Button(action: {viewModel.print1(str: UIScreen.main.bounds.height)}){
+                Button(action: {viewModel.text2Speech()}){
                     Text("📣")
                         .font(.system(size:40))
                         .frame(width: inputHeight, height: inputHeight, alignment: .center)
