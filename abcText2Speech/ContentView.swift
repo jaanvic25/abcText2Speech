@@ -117,7 +117,7 @@ struct ContentView: View {
                                 Text(suggestion)
                                     .onTapGesture {
                                         if let index = viewModel.currentInput.index(endIndex, offsetBy: -viewModel.currentWord.count, limitedBy: startIndex) {
-                                            viewModel.currentInput = String(viewModel.currentInput[..<index]) + suggestion + " "
+                                            viewModel.currentInput = String(viewModel.currentInput[..<index]) + suggestion + ""
                                             viewModel.currentWord = ""
                                         }
                                     }
@@ -142,41 +142,22 @@ struct ContentView: View {
             }
             HStack {
                 ScrollView{
-                    VStack{
-                        LazyVGrid(columns:columnArray, spacing:vSpace){
-                            ForEach(viewModel.keys){ key in
-                                keyView(key: key.content,
-                                        keyWidth:inputWidth,
-                                        keyHeight:inputHeight)
-                                .onTapGesture{
-                                    viewModel.processKey(label:key)
-                                }
-                            }
-                            .padding(.horizontal, horizontalPadding/3)
-                        }
-                        .frame(width: calcNumberOfColumns()*inputWidth+100)
-                        
-//                                            .frame(width: calcNumberOfColumns()*inputWidth+100,height: UIScreen.main.bounds.height * 0.68, alignment: .top)
-                        
-                        //                    Spacer(minLength: UIScreen.main.bounds.height/1.5)
-                        Text("Custom Phrases (enter in settings)")
-//                        VStack{
-                            ForEach(viewModel.custPhrases) { phrase in
-                                if (phrase.title != ""){
-                                    keyView(key: phrase.title,
-                                            keyWidth: calcNumberOfColumns()*inputWidth+100,
-                                            keyHeight:inputHeight)
-                                    .onTapGesture{
-                                        viewModel.processSep(value:phrase.title)
-//                                    }
-                                }
+                    LazyVGrid(columns:columnArray, spacing:vSpace){
+                        ForEach(viewModel.keys){ key in
+                            keyView(key: key,
+                                    keyWidth:inputWidth,
+                                    keyHeight:inputHeight)
+                            .onTapGesture{
+                                viewModel.processKey(label:key)
                             }
                         }
-                        Spacer(minLength: UIScreen.main.bounds.height/4)
+                        .padding(.horizontal, horizontalPadding/3)
                     }
-//                    Spacer(minLength: UIScreen.main.bounds.height/2.5)
+                    
+                    .frame(width: calcNumberOfColumns()*inputWidth+100,height: UIScreen.main.bounds.height * 0.68, alignment: .top)
+                    
+                    Spacer(minLength: UIScreen.main.bounds.height/1.5)
                 }
-
                 Spacer()
                     .frame(width: 10)
                 VStack{
@@ -262,7 +243,7 @@ func makePaddingHorizontal(horizontalSpacing: CGFloat, keyWidth:CGFloat)->CGFloa
 
 struct keyView: View {
     
-    let key: String
+    let key: abcTextModel.Key
     
     var keyWidth:CGFloat
     var keyHeight:CGFloat
@@ -276,7 +257,7 @@ struct keyView: View {
             shape
                 .strokeBorder(lineWidth: 2)
                 .foregroundColor(.black)
-            Text(key)
+            Text(key.content)
                 .font(.system(size: 22))
                 .foregroundColor(textColor)
         }

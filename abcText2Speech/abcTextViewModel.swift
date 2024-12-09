@@ -16,15 +16,18 @@ class abcTextViewModel:ObservableObject{
     static let abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z", ".", ",", "!", "?","'", "/"]
     static let qwerty = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","spc", "⇧","⌫", ".", ",", "!", "?","'", "/"]
     static let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-    static let phrases = ["👋", "🪪", "🙏", "❓", "💧"]
+    static let phrases = ["👋", "🪪", "🙏", "❓", "💧", "p6", "p7", "p8", "p9", "p0"]
     static let phrasesOrig = [
         "👋": "Hi, how are you? ",
         "🪪": "My name is " ,
         "🙏": "Thank you. ",
         "❓": "What do you mean? ",
-        "💧": "Could I have water please? "]
-    
-    static let customPhrases =  [currUser.p6 ?? "", currUser.p7 ?? "", currUser.p8 ?? "", currUser.p9 ?? "",  currUser.p10 ?? ""]
+        "💧": "Could I have water please? ",
+        "p6": currUser.p6 ?? "",
+        "p7": currUser.p7 ?? "",
+        "p8": currUser.p8 ?? "",
+        "p9": currUser.p9 ?? "",
+        "p10": currUser.p10 ?? ""]
     
     static let lettersABC = abc + phrases
     static let lettersQWERTY = qwerty + phrases
@@ -83,15 +86,6 @@ class abcTextViewModel:ObservableObject{
     var keys: Array<abcTextModel.Key>{
         return model.keys
     }
-    
-    var custPhrases: Array<Phrase>{
-        return [Phrase(title: currUser.p6 ?? ""), Phrase(title: currUser.p7 ?? ""), Phrase(title: currUser.p8 ?? ""), Phrase(title: currUser.p9 ?? ""), Phrase(title: currUser.p10 ?? "")]
-    }
-    
-    struct Phrase : Identifiable{
-       let id = UUID()
-       let title: String
-   }
 
     func text2Speech(){
         let utterance = AVSpeechUtterance(string: currentInput)
@@ -103,16 +97,7 @@ class abcTextViewModel:ObservableObject{
         print(str)
     }
     func processSep(value: String){
-        if (abcTextViewModel.customPhrases.contains(value)){
-            for phrase in custPhrases {
-                if phrase.title == value {
-                    model.appendOne(value: phrase.title)
-                    currentWord.append(phrase.title)
-                    currentInput.append(phrase.title)
-                }
-            }
-        }
-        else if(value == "⇧"){
+        if(value == "⇧"){
             uppercase = true
         } else if (value == "⌫") {
             if currentWord.count != 0{
