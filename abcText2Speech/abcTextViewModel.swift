@@ -13,10 +13,21 @@ class abcTextViewModel:ObservableObject{
     
     static let shared = abcTextViewModel()
     
-    static let abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z", ".", ",", "!", "?","'", "/"]
-    static let qwerty = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M","spc", "⇧","⌫", ".", ",", "!", "?","'", "/"]
+    static let abc = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z", ]
+    static let qwerty = ["Q","W","E","R","T","Y","U","I","O","P","A","S","D","F","G","H","J","K","L","Z","X","C","V","B","N","M"]
     static let numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    static let punctuations = [".", ",", "!", "?","'", "/"]
     static let phrases = ["👋", "🪪", "🙏", "❓", "💧"]
+    static let controls = ["Spc","⇧", "⌫", "🗑"]
+    static let keyBoardNames = ["abc","qwerty", "numbers", "punctuations", "phrases", "controls"]
+    static let keyBoards = [
+        abcTextViewModel.keyBoardNames[0]:abcTextViewModel.abc,
+        abcTextViewModel.keyBoardNames[1]:abcTextViewModel.qwerty,
+        abcTextViewModel.keyBoardNames[2]:abcTextViewModel.numbers,
+        abcTextViewModel.keyBoardNames[3]:abcTextViewModel.punctuations,
+        abcTextViewModel.keyBoardNames[4]:abcTextViewModel.phrases,
+        abcTextViewModel.keyBoardNames[5]:abcTextViewModel.controls,
+    ]
     static let phrasesOrig = [
         "👋": "Hi, how are you? ",
         "🪪": "My name is " ,
@@ -24,40 +35,18 @@ class abcTextViewModel:ObservableObject{
         "❓": "What do you mean? ",
         "💧": "Could I have water please? "]
     
-    static let customPhrases =  [currUser.p6 ?? "", currUser.p7 ?? "", currUser.p8 ?? "", currUser.p9 ?? "",  currUser.p10 ?? ""]
+    static let customPhrases =  [
+        currUser.p6 ?? "", currUser.p7 ?? "", currUser.p8 ?? "", currUser.p9 ?? "",  currUser.p10 ?? ""]
     
-    static let lettersABC = abc + phrases
-    static let lettersQWERTY = qwerty + phrases
-    static let abcNum = abc + numbers + phrases
-    static let qwertyNum = qwerty + numbers + phrases
-    var qwerty = false
-    var nums = true
+    var qwertyFlag = false
     var phrasesDict = phrasesOrig
    
-    static func createABCText(qwerty: Bool, nums: Bool, phrases: Dictionary<String, String>)-> abcTextModel {
-        
-        
-        if qwerty{
-            if nums{
-                return abcTextModel(numberOfChars: qwertyNum.count, createKeyContent: {keyIndex in
-                    qwertyNum[keyIndex]})
-            } else {
-                return abcTextModel(numberOfChars: lettersQWERTY.count, createKeyContent: {keyIndex in
-                    lettersQWERTY[keyIndex]})
-            }
-        } else {
-            if nums{
-                return abcTextModel(numberOfChars: abcNum.count, createKeyContent: {keyIndex in
-                    abcNum[keyIndex]})
-            } else {
-                return abcTextModel(numberOfChars: lettersABC.count, createKeyContent: {keyIndex in
-                    lettersABC[keyIndex]})
-            }
-        }
+    static func createABCText(qwertyFlag: Bool, phrasesDictLocal: Dictionary<String, String>)-> abcTextModel {
+        return abcTextModel(keyBoards:keyBoards, keyBoardNames:keyBoardNames, qwertyFlag:qwertyFlag)
     }
 
     
-    @Published internal var model: abcTextModel = createABCText(qwerty: false, nums: true, phrases: phrasesOrig)
+    @Published internal var modelABCTextModel: abcTextModel = createABCText(qwertyFlag: false, phrasesDictLocal: phrasesOrig)
 
     @Published var suggestions: [String] = []
     @Published var currentInput = ""
@@ -77,18 +66,35 @@ class abcTextViewModel:ObservableObject{
         return inp + 1
     }
     func getInputString() -> String{
-        return model.getInputString()
+        return modelABCTextModel.getInputString()
     }
     
     var keys: Array<abcTextModel.Key>{
-        return model.keys
+        return modelABCTextModel.keys
     }
     
-    var custPhrases: Array<Phrase>{
-        return [Phrase(title: currUser.p6 ?? ""), Phrase(title: currUser.p7 ?? ""), Phrase(title: currUser.p8 ?? ""), Phrase(title: currUser.p9 ?? ""), Phrase(title: currUser.p10 ?? "")]
+    var numKeys: Array<abcTextModel.Key>{
+        return modelABCTextModel.numKeys
     }
     
-    struct Phrase : Identifiable{
+    var punctuationKeys: Array<abcTextModel.Key>{
+        return modelABCTextModel.punctuationKeys
+    }
+    
+    var phraseKeys: Array<abcTextModel.Key>{
+        return modelABCTextModel.phraseKeys
+    }
+    
+    var custPhrases: Array<CustomPhraseIdentifiable>{
+        return [CustomPhraseIdentifiable(title: currUser.p6 ?? ""),
+                CustomPhraseIdentifiable(title: currUser.p7 ?? ""),
+                CustomPhraseIdentifiable(title: currUser.p8 ?? ""),
+                CustomPhraseIdentifiable(title: currUser.p9 ?? ""),
+                CustomPhraseIdentifiable(title: currUser.p10 ?? "")]
+    }
+    
+    
+    struct CustomPhraseIdentifiable : Identifiable{
        let id = UUID()
        let title: String
    }
@@ -102,71 +108,51 @@ class abcTextViewModel:ObservableObject{
     func print1(str: Double){
         print(str)
     }
-    func processSep(value: String){
-        if (abcTextViewModel.customPhrases.contains(value)){
+    
+    func processKey(label:String){
+        var value = ""
+        
+        if let systemPhraseValue = phrasesDict[label] {
+            modelABCTextModel.appendOne(value: systemPhraseValue)
+            currentWord.append(systemPhraseValue)
+            currentInput.append(systemPhraseValue)
+        } else if (abcTextViewModel.customPhrases.contains(label)){
             for phrase in custPhrases {
                 if phrase.title == value {
-                    model.appendOne(value: phrase.title)
+                    modelABCTextModel.appendOne(value: phrase.title)
                     currentWord.append(phrase.title)
                     currentInput.append(phrase.title)
                 }
             }
-        }
-        else if(value == "⇧"){
-            uppercase = true
-        } else if (value == "⌫") {
-            if currentWord.count != 0{
-                currentWord.removeLast()
-            }
-            model.deleteOne()
-            currentInput = model.getInputString()
-        } else if (value == "spc") {
-            model.appendOne(value:" ")
-            currentInput = model.getInputString()
-            currentWord = ""
-
-        } else if(value == "🗑"){
-            currentWord = ""
-            currentInput = ""
-            model.clearAll()
-        }
-        model.equal(value: currentInput)
-        print("Processing key : " + value + " input: " + model.getInputString());
-    }
-    func processKey(label:abcTextModel.Key){
-        var value = ""
-        if (abcTextViewModel.phrases.contains(label.content)){
-            for key in phrasesDict.keys {
-                if key == label.content {
-                    model.appendOne(value: phrasesDict[key]!)
-                    currentWord.append(phrasesDict[key] ?? "")
-                    currentInput.append(phrasesDict[key] ?? "")
-                }
-            }
-        } else if(label.content == "📣"){
+        } else if(label == "📣"){
             let utterance = AVSpeechUtterance(string: currentInput)
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
             synthesizer.speak(utterance)
-            
-        } else if(label.content == "🗑"){
+        } else if(label == "🗑"){
             currentWord = ""
             currentInput = ""
-            model.clearAll()
-        }
-        else {
-            
+            modelABCTextModel.clearAll()
+        } else if(label == "⇧"){
+            uppercase = true
+        } else if (label == "⌫") {
+            if currentWord.count != 0{
+                currentWord.removeLast()
+            }
+            modelABCTextModel.deleteOne()
+            currentInput = modelABCTextModel.getInputString()
+        } else {
             if (uppercase){
-                value = label.content.uppercased()
+                value = label.uppercased()
                 uppercase = false
             } else {
-                value = label.content.lowercased()
+                value = label.lowercased()
             }
             
             currentWord.append(value)
-            model.appendOne(value:value)
+            modelABCTextModel.appendOne(value:value)
             currentInput.append(value)
         }
-        model.equal(value: currentInput)
-        print("Processing key : " + label.content + " input: " + model.getInputString());
+        modelABCTextModel.equal(value: currentInput)
+        print("Processing key : " + label + " input: " + modelABCTextModel.getInputString());
     }
 }

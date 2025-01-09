@@ -122,6 +122,7 @@ class LoginViewModel: ObservableObject{
         var correctPassword: Bool = false
         var ct = 0
         for entity in dataController.savedEntities {
+            print(ct)
             if entity.email?.lowercased() == self.email.lowercased() {
                 userVerified = true
                 if entity.id == self.password{
@@ -134,7 +135,7 @@ class LoginViewModel: ObservableObject{
           
         }
         
-        currUser = dataController.savedEntities[ct]
+        currUser = dataController.savedEntities[ct-1]
         
         buttonState = .loading(title: "Loading", systemImage: "person")
         
