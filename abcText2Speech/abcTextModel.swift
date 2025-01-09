@@ -8,9 +8,17 @@
 import Foundation
 import UIKit
 
+extension String: Error {}
 
 struct abcTextModel {
     private(set) var keys: Array<Key>
+    private(set) var numKeys: Array<Key>
+    private(set) var punctuationKeys: Array<Key>
+    private(set) var phraseKeys: Array<Key>
+    private(set) var controlKeys: Array<Key>
+    private(set) var speakerKey = "📣"
+    private(set) var inputLabelKey = " INPUT: "
+    private(set) var gearKey = "gear"
     
     private var inputString = ""
     
@@ -19,12 +27,37 @@ struct abcTextModel {
         return inputString
     }
     
-    init(numberOfChars: Int, createKeyContent: (Int) -> String) {
+    init(keyBoards:[String:[String]], keyBoardNames:[String], qwertyFlag:Bool) {
         keys = Array<Key>()
-        for keyIndex in 0..<numberOfChars{
-            let content = createKeyContent(keyIndex)
-            keys.append(Key(content: content, id: keyIndex))
+        numKeys = Array<Key>()
+        punctuationKeys = Array<Key>()
+        phraseKeys = Array<Key>()
+        controlKeys = Array<Key>()
+        
+        /*
+        for keyBoardName in keyBoardNames {
+            if keyBoards[keyBoardName] == nil {
+                throw ("Missing Key Board: " + keyBoardName)
+            }
+        }*/
+        
+        let letterArraryName = qwertyFlag ? "qwerty":"abc"
+        
+        func localF(arrayToUpdate:inout Array<Key>, keyBoardName:String){
+            var index = 0
+            for key in keyBoards[keyBoardName]! {
+                arrayToUpdate.append(Key(content: key, id: index))
+                index += 1
+            }
         }
+        
+        localF(arrayToUpdate: &keys, keyBoardName: letterArraryName)
+        localF(arrayToUpdate: &numKeys, keyBoardName: "numbers")
+        localF(arrayToUpdate: &punctuationKeys, keyBoardName: "punctuations")
+        localF(arrayToUpdate: &phraseKeys, keyBoardName: "phrases")
+        localF(arrayToUpdate: &controlKeys, keyBoardName: "controls")
+        
+        print(keys.map {print($0)})
     }
     
     struct Key: Identifiable {

@@ -31,7 +31,7 @@ struct LoginView: View {
                         Text("LOGIN")
                             .font(.title)
                         TextField("Email", text: $model.email)
-                            .textContentType(.emailAddress)
+                            .textContentType(.username)
                             .keyboardType(.emailAddress)
                             .padding(8)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
@@ -42,6 +42,8 @@ struct LoginView: View {
                             }
                         
                         PasswordField(title: "Password", text: $model.password)
+                            .textContentType(.password)
+
                             .focused($focus, equals: .password)
                             .padding(8)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))

@@ -26,6 +26,7 @@ struct SignUpView: View {
                             .font(.title)
                         HStack{
                             TextField("First Name", text: $model.fname)
+                                .textContentType(.name)
                                 .submitLabel(.next)
                                 .disableAutocorrection(true)
                                 .focused($focus, equals: .name)
@@ -37,6 +38,7 @@ struct SignUpView: View {
                             
                             TextField("Last Name", text: $model.lname)
                                 .disableAutocorrection(true)
+                                .textContentType(.familyName)
                                 .submitLabel(.next)
                                 .focused($focus, equals: .name)
                                 .padding(8)
@@ -58,6 +60,7 @@ struct SignUpView: View {
                             }
                         
                         PasswordField(title: "Password", text: $model.password)
+                            .textContentType(.newPassword)
                             .focused($focus, equals: .password)
                             .padding(8)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.gray, style: StrokeStyle(lineWidth: 1.0)))
